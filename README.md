@@ -70,6 +70,7 @@ To set up the lab:
 **Verification of Successful Installation:**  
 - Sysmon logs were visible in Event Viewer.
 - Successfully logged into Wazuh and TheHive dashboards via their public IP.
+![image](https://github.com/user-attachments/assets/fd955544-d7c4-4e88-a5c1-9b7983c7d87e)
 
 ---
 
@@ -81,7 +82,6 @@ To set up the lab:
 - Fixed file permissions for TheHive directories.
 - Updated TheHive's `application.conf` with the right IP and cluster names.
 
-![TheHive Running](https://github.com/user-attachments/assets/615459db-ed66-492e-b752-87f5e1cd5087)
 ![theHive group created ](https://github.com/user-attachments/assets/8f405abf-fa39-4170-ad8c-00252e340b83)
 
 ### Wazuh
@@ -218,6 +218,13 @@ In this part of the project, I configured both TheHive and Wazuh servers and got
       ```bash
       systemctl status thehive
 
+ <details>
+  <summary> ▶️ Show Execution Screenshot </summary>
+
+  ![TheHive Running](https://github.com/user-attachments/assets/615459db-ed66-492e-b752-87f5e1cd5087)
+
+ </details>
+ 
 **5. Login to TheHive**
   - Accessed: http://<Hive's public IP>:9000 with the Default Credentials.
 
@@ -247,7 +254,14 @@ In this part of the project, I configured both TheHive and Wazuh servers and got
 
     - Verified Windows agent appeared as Active in Wazuh dashboard.
 
+ <details>
+  <summary> ▶️ Show Execution Screenshot </summary>
+  
+![image](https://github.com/user-attachments/assets/204cfe0b-d96d-471c-a512-b9eecb56ea9f)
+![image](https://github.com/user-attachments/assets/4416e58e-c22f-4971-96e9-eb0e86c9afa1)
 
+ </details>
+ 
 </details>
 
 ---
@@ -258,12 +272,19 @@ Creating telemetry steps and ingest into Wazuh:
 
 - **Sysmon Log Collection**: Modified `ossec.conf` on the Windows agent to capture Sysmon logs by specifying the correct event channel.
 - **Simulated Attack**: Disabled Defender by adding an exclusion temporarily → Downloaded and ran **Mimikatz** to simulate credential dumping.
+  
+  ![image](https://github.com/user-attachments/assets/216cc76e-6b5d-4ed8-a417-36b90f4ce322)
+
 - **Detection Challenges**:  
   Initially, no custom Wazuh rules triggered alerts on Mimikatz execution.
 - **Enhanced Logging**:
   - Enabled `logall` and `logall_json` in Wazuh Manager for complete archiving.
   - Configured Filebeat to ingest archived logs.
   - Created a new index (`wazuh-archives-*`) to view the data.
+    ![image](https://github.com/user-attachments/assets/398062ed-7bbe-471e-b339-7d6a61f076c4)
+
+
+
 - **Custom Wazuh Rule**:  
   - Added a new high-severity rule matching Mimikatz process creation in `local_rules.xml` targeting the "original file name" field from Sysmon event ID 1 (process creation).
   - This rule was given a custom ID (rule ID 100002), assigned a high severity (15), and tagged with the MITRE ATT&CK tactic T1003 (Credential Dumping).
