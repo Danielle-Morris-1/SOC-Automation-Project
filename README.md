@@ -1,6 +1,6 @@
 # 🚀 SOC Automation Project
 
-## Scope 🔍
+## Scope 
 In this cybersecurity project, I built a cloud-based SOC automation lab to gain hands-on experience with SIEM, SOAR, and case management integration. My goal was to create a fully functional home lab environment that simulates a real-world SOC. I deployed **Wazuh** as the SIEM/XDR, **TheHive** for case management, and **Shuffle** for SOAR automation.  
 I configured Wazuh to forward alerts into Shuffle workflows, where I parsed event data and extracted indicators of compromise (IoCs) like SHA256 hashes using regex. I automated the creation of cases in TheHive based on specific alert triggers, enriched IOCs with VirusTotal, and set up email notifications to alert analysts of new incidents. I also generated simulated attack telemetry — including Mimikatz credential dumping and suspicious PowerShell activity — to test the detection and response capabilities of the lab.
 
@@ -9,10 +9,14 @@ I configured Wazuh to forward alerts into Shuffle workflows, where I parsed even
 ## 🛠️ Technology Utilized
 
 - **Wazuh**: SIEM/XDR platform for alert detection and forwarding.
-- **TheHive**: Case management system for incident tracking and triage.
+- **TheHive**: Case management system for incident tracking.
+- **Sysmon**: For Windows telemetry collection
 - **Shuffle**: SOAR platform for automating enrichment and analyst notifications.
+- **Python** (inside Shuffle): Custom parsing and extraction of SHA256 hashes. 
 - **VirusTotal**: Threat intelligence source for file and hash reputation lookups.
-- **Python** (inside Shuffle): Custom parsing and extraction of SHA256 hashes.
+- **Bash**: Linux scripting for installation and configuration tasks. 
+- **PowerShell**: Windows scripting for telemetry generation and configuration tasks.
+
 
 ## ☁️ Infrastructure/Cloud Environment
 
@@ -25,7 +29,7 @@ I configured Wazuh to forward alerts into Shuffle workflows, where I parsed even
 
 - [Lab Diagram](#lab-diagram)
 - [Installation 🖥️](https://github.com/Danielle-Morris-1/SOC-Automation-Project/tree/main?tab=readme-ov-file#installation-%EF%B8%8F)
-- [Configuration ⚙️](#configuration)
+- [Configuration ⚙️](https://github.com/Danielle-Morris-1/SOC-Automation-Project/tree/main?tab=readme-ov-file#configuration-%EF%B8%8F)
 - [Telemetry Generation & Wazuh Ingestion ⚡](#telemetry-generation--wazuh-ingestion-)
 - [Shuffle Workflow 🔄](#shuffle-workflow-)
 - [Final Reflection 🧠](#final-reflection-)
@@ -42,10 +46,12 @@ I mapped out the **logical data flow** between key components:
 - SOC Analyst (email notifications)
 
 The flow included:  
-✅ Client events → Wazuh → Shuffle → Enrichment (VirusTotal) → TheHive Case → Analyst Notification
+🔀 Client events → Wazuh → Shuffle → Enrichment (VirusTotal) → TheHive Case → Analyst Notification
 
+ ![image](https://github.com/user-attachments/assets/60a3dec6-40ca-4b25-8c46-bf8206e7794d)
+ 
 <details>
-<summary>🗺️ Click to visualize the flow</summary>
+<summary> Click to visualize the lab 📈 </summary>
 
 ![image](https://github.com/user-attachments/assets/8490e57e-5659-438f-a369-7d994706f282)
 
@@ -88,7 +94,7 @@ By the end of this phase, Wazuh was collecting logs, and TheHive was ready for i
 ![Wazuh Events in Dashboard](https://github.com/user-attachments/assets/023f04f0-2086-4dc3-875e-944245d5c9fd)
 
 <details>
-<summary> Click to see more details </summary>
+<summary> More Details </summary>
 
 In this part of the project, I configured both TheHive and Wazuh servers and got them running properly, with a Windows 10 client reporting into Wazuh.
 
@@ -126,7 +132,7 @@ In this part of the project, I configured both TheHive and Wazuh servers and got
 
  
   <details>
-  <summary> ▶️ Show Execution Output </summary>
+  <summary> ▶️ Show Execution Screenshot </summary>
   
    ![Cassandra Running ](https://github.com/user-attachments/assets/6d7e6e93-bf8d-4d58-ac2b-494c482750c5)
  
@@ -163,7 +169,7 @@ In this part of the project, I configured both TheHive and Wazuh servers and got
     systemctl status elasticsearch
 
 <details>
-<summary> ▶️ Show Execution Output </summary>
+<summary> ▶️ Show Execution Screenshot </summary>
   
   ![ElasticSearch Running ](https://github.com/user-attachments/assets/7c1b94ae-e038-4f26-b105-e4140b255a08)
 
@@ -180,7 +186,7 @@ In this part of the project, I configured both TheHive and Wazuh servers and got
     chown -R thehive:thehive /opt/thp
 
   <details>
-  <summary> ▶️ Show Execution Output </summary>
+  <summary> ▶️ Show Execution Screenshot </summary>
   
   ![TheHive access control ](https://github.com/user-attachments/assets/30095531-a675-4734-8d6e-ac1339ee3586)
 
@@ -271,7 +277,7 @@ Creating telemetry steps and ingest into Wazuh:
    ![mimikatz detected by rule ](https://github.com/user-attachments/assets/c411142e-bf1c-4d81-bd59-1cc4d64a9d3a)
     
 <details>
-<summary> Click to see more details </summary>
+<summary> More Details </summary>
   
 First, I backed up the Wazuh agent’s configuration file (`ossec.conf`) on the Windows 10 machine. I made a backup copy (`ossec.conf.backup`) in case I needed to revert changes.
 
@@ -339,7 +345,7 @@ I moved on to setting up Shuffle to automate alert processing and notification.
 
 
 <details>
-<summary> Click to see more details </summary>
+<summary> More Details </summary>
 
 In this part of the lab, I moved onto connecting **Shuffle** (SOAR platform) with both **TheHive** and **VirusTotal**, setting up the workflow to automatically enrich alerts and notify analysts.
 
