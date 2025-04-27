@@ -24,7 +24,7 @@ I configured Wazuh to forward alerts into Shuffle workflows, where I parsed even
 ## 📑 Table of Contents
 
 - [Lab Diagram](#lab-diagram)
-- [Installation 🖥️](#installation)
+- [Installation 🖥️](https://github.com/Danielle-Morris-1/SOC-Automation-Project/tree/main?tab=readme-ov-file#installation-%EF%B8%8F)
 - [Configuration ⚙️](#configuration)
 - [Telemetry Generation & Wazuh Ingestion ⚡](#telemetry-generation--wazuh-ingestion-)
 - [Shuffle Workflow 🔄](#shuffle-workflow-)
