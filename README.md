@@ -303,7 +303,7 @@ First, I backed up the Wazuh agent’s configuration file (`ossec.conf`) on the 
 
 Next, I modified the Wazuh agent configuration to ingest Sysmon logs, which are critical for detailed event monitoring. Using the Windows Event Viewer, I located the correct channel name (`Microsoft-Windows-Sysmon/Operational`) and edited `ossec.conf` to add a `<localfile>` block for this channel. I restarted the Wazuh Agent service so the new settings would take effect.
 
-With Sysmon logs being collected, I prepared for testing by downloading **Mimikatz** — a well-known tool for credential extraction. To avoid automatic deletion, I temporarily disabled **Windows Defender** (by excluding the Downloads folder) and then extracted the Mimikatz zip file.
+With Sysmon logs being collected, I prepared for testing by downloading **[Mimikatz](https://github.com/gentilkiwi/mimikatz/releases/tag/2.2.0-20220919)** — a well-known tool for credential extraction. To avoid automatic deletion, I temporarily disabled **Windows Defender** (by excluding the Downloads folder) and then extracted the Mimikatz zip file.
 
 I launched an administrative PowerShell session, navigated to the extracted folder, and executed `mimikatz.exe`.
 
