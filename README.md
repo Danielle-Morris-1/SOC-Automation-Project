@@ -24,8 +24,8 @@ I configured Wazuh to forward alerts into Shuffle workflows, where I parsed even
 ## 📑 Table of Contents
 
 - [Lab Diagram](#lab-diagram)
-- [Installation 🖥️](#installation-)
-- [Configuration ⚙️](#configuration-)
+- [Installation 🖥️](#installation)
+- [Configuration ⚙️](#configuration)
 - [Telemetry Generation & Wazuh Ingestion ⚡](#telemetry-generation--wazuh-ingestion-)
 - [Shuffle Workflow 🔄](#shuffle-workflow-)
 - [Final Reflection 🧠](#final-reflection-)
@@ -42,12 +42,13 @@ I mapped out the **logical data flow** between key components:
 - SOC Analyst (email notifications)
 
 The flow included:  
-✅ Client events → Wazuh → Shuffle → Enrichment (VirusTotal) → TheHive Case → Analyst Notification.
+✅ Client events → Wazuh → Shuffle → Enrichment (VirusTotal) → TheHive Case → Analyst Notification
 
 <details>
 <summary>🗺️ Click to visualize the flow</summary>
 
-**
+![image](https://github.com/user-attachments/assets/8490e57e-5659-438f-a369-7d994706f282)
+
 </details>
 
 ---
@@ -56,7 +57,7 @@ The flow included:
 
 To set up the lab:
 
-- **Windows 10 VM**: Downloaded ISO → Installed manually on VirtualBox → Installed Sysmon for enhanced telemetry.  
+- **Windows 10 VM**: Downloaded ISO → Installed manually on VirtualBox → Installed Sysmon for enhanced telemetry
 - **Wazuh Server** (DigitalOcean): Deployed Ubuntu droplet → Secured SSH access → Installed Wazuh 4.7 → Extract Wazuh Credentials
 - **TheHive Server**: Another Ubuntu droplet → Secured SSH access → Installed Java, Cassandra, Elasticsearch → Installed TheHive 5 → Default Credentials on port 9000
 
@@ -86,6 +87,163 @@ By the end of this phase, Wazuh was collecting logs, and TheHive was ready for i
 
 ![Wazuh Events in Dashboard](https://github.com/user-attachments/assets/023f04f0-2086-4dc3-875e-944245d5c9fd)
 
+<details>
+<summary> Click to see more details </summary>
+
+In this part of the project, I configured both TheHive and Wazuh servers and got them running properly, with a Windows 10 client reporting into Wazuh.
+
+  **1. Cassandra**: First, I configured TheHive by editing Cassandra’s configuration files.
+  
+  - Opened Cassandra config:
+    ```bash
+    nano /etc/cassandra/cassandra.yaml
+
+  - Updated:
+
+    cluster_name → Danielle-Test-Cluster
+            
+    listen_address → Hive's public IP
+            
+    rpc_address → Hive's public IP
+            
+    seeds → Hive's public IP
+
+  - Stopped Cassandra:
+    ```bash
+    systemctl stop cassandra
+
+  - Cleared old data:
+    ```bash
+    rm -rf /var/lib/cassandra/*
+
+  - Restarted Cassandra:
+     ```bash
+     systemctl start cassandra
+  
+  - Verified:
+     ```bash
+     systemctl status cassandra
+
+ 
+  <details>
+  <summary> ▶️ Show Execution Output </summary>
+  
+   ![Cassandra Running ](https://github.com/user-attachments/assets/6d7e6e93-bf8d-4d58-ac2b-494c482750c5)
+ 
+  </details>
+
+
+
+
+**2. Elasticsearch**: Next, I configured Elasticsearch by editing its configuration file.
+
+  - Opened Elasticsearch config:
+    ```bash
+    nano /etc/elasticsearch/elasticsearch.yml
+
+  - Updated:
+
+    cluster.name → thehive
+    
+    node.name → node-1
+    
+    network.host → Hive's public IP
+    
+    http.port → 9200 
+
+    cluster.initial_master_nodes → ["node-1"]
+
+  - Started and enabled:
+    ```bash
+    systemctl start elasticsearch
+    systemctl enable elasticsearch
+
+  - Checked status:
+    ```bash
+    systemctl status elasticsearch
+
+<details>
+<summary> ▶️ Show Execution Output </summary>
+  
+  ![ElasticSearch Running ](https://github.com/user-attachments/assets/7c1b94ae-e038-4f26-b105-e4140b255a08)
+
+</details>
+
+**3. Prepare File Permissions for TheHive**: I made sure TheHive user had proper access to its required directories. 
+
+  - Checked permissions:
+    ```bash
+    ls -la /opt/thp
+     
+ - Changed ownership:
+    ```bash
+    chown -R thehive:thehive /opt/thp
+
+  <details>
+  <summary> ▶️ Show Execution Output </summary>
+  
+  ![TheHive access control ](https://github.com/user-attachments/assets/30095531-a675-4734-8d6e-ac1339ee3586)
+
+  </details>
+  
+**4. Configure TheHive**  
+  - Edited TheHive configuration:
+    ```bash
+    nano /etc/thehive/application.conf
+
+  - Updated:
+  
+    Database host IP → Hive's public IP
+      
+    Cluster name → Danielle-Test-Cluster
+      
+    Elasticsearch IP → Hive's public IP
+      
+    Storage path → /opt/thp
+      
+    Application base URL → http://<Hive's public IP>:9000
+
+   - Started and enabled:
+     ```bash
+     systemctl start thehive
+     systemctl enable thehive
+
+   - Verified:
+      ```bash
+      systemctl status thehive
+
+**5. Login to TheHive**
+  - Accessed: http://<Hive's public IP>:9000 with the Default Credentials.
+
+  - ⚠️ The authentication **failed**, I checked Elasticsearch to see it was not running properly. I learned to fix it by creating a custom JVM options file for Elasticsearch to limit memory usage if needed, and restarting Elasticsearch.
+
+  - Fixed Elasticsearch memory issues by creating:
+    ```bash
+    nano /etc/elasticsearch/jvm.options.d/jvm.options
+
+  - Restarted Elasticsearch:
+    ```bash
+    systemctl restart elasticsearch
+
+**6. Configure Wazuh and Add Windows Agent**
+  
+  - Retrieved dashboard credentials:
+      ```bash
+      cat /var/ossec/etc/.wazuh-install-passwords.txt
+    
+ - Logged into Wazuh dashboard.
+    
+ - Added new agent:
+    
+      Clicked "Add agent" → Selected Windows → Entered Wazuh public IP and agent name Danielle.
+    
+    - Ran copied installation command on Windows (PowerShell as Admin)
+
+    - Verified Windows agent appeared as Active in Wazuh dashboard.
+
+
+</details>
+
 ---
 
 ## Telemetry Generation & Wazuh Ingestion ⚡
@@ -93,7 +251,7 @@ By the end of this phase, Wazuh was collecting logs, and TheHive was ready for i
 Creating telemetry steps and ingest into Wazuh:
 
 - **Sysmon Log Collection**: Modified `ossec.conf` on the Windows agent to capture Sysmon logs by specifying the correct event channel.
-- **Simulated Attack**: Disabled Defender exclusions temporarily → Downloaded and ran **Mimikatz** to simulate credential dumping.
+- **Simulated Attack**: Disabled Defender by adding an exclusion temporarily → Downloaded and ran **Mimikatz** to simulate credential dumping.
 - **Detection Challenges**:  
   Initially, no custom Wazuh rules triggered alerts on Mimikatz execution.
 - **Enhanced Logging**:
@@ -106,14 +264,14 @@ Creating telemetry steps and ingest into Wazuh:
  
     ![Local rules for mimikatz](https://github.com/user-attachments/assets/22f1a3a0-984d-4b05-8b2e-2df5e4542058)
 
-    ![mimikatz detected by rule ](https://github.com/user-attachments/assets/c411142e-bf1c-4d81-bd59-1cc4d64a9d3a)
 
 - **Validation**:  
   - Executed renaming the Mimikatz binary (`testing.exe`).
-  - Confirmed Wazuh alerted based on internal metadata, not filename alone. ![mimikatz](https://github.com/user-attachments/assets/2adb05dd-a1c9-4ffd-967a-d3f9297f49af)
-
+  - Confirmed Wazuh alerted based on internal metadata, not filename alone.
+   ![mimikatz detected by rule ](https://github.com/user-attachments/assets/c411142e-bf1c-4d81-bd59-1cc4d64a9d3a)
+    
 <details>
-<summary> Click to expand detailed explanation </summary>
+<summary> Click to see more details </summary>
   
 First, I backed up the Wazuh agent’s configuration file (`ossec.conf`) on the Windows 10 machine. I made a backup copy (`ossec.conf.backup`) in case I needed to revert changes.
 
@@ -123,6 +281,8 @@ With Sysmon logs being collected, I prepared for testing by downloading **Mimika
 
 I launched an administrative PowerShell session, navigated to the extracted folder, and executed `mimikatz.exe`.
 
+![image](https://github.com/user-attachments/assets/2af373e3-fa38-4edb-881a-471afdddfcfc)
+
 Initially, I checked the Wazuh dashboard for any alerts related to Mimikatz; however, because no specific detection rules were triggered yet, events did not immediately appear.
 
 To capture all activity, I adjusted the Wazuh manager’s configuration by setting `logall` and `logall_json` to `"yes"` in its `ossec.conf` file, ensuring all events would be archived — not just those matching existing rules. I restarted the Wazuh manager service to apply the changes.
@@ -131,11 +291,13 @@ To make archived logs searchable, I edited the `filebeat.yml` file to enable arc
 
 In the Wazuh dashboard, I created a new index pattern (`wazuh-archives-*`) to access archived events. Using the **Discover** section, I searched the archives for "mimikatz" events.
 
-To improve detection, I created a custom Wazuh rule. Through the dashboard, I added a new rule in `local_rules.xml` targeting the "original file name" field from Sysmon event ID 1 (process creation). This rule was given a custom ID (rule ID 100002), assigned a high severity (`15`), and tagged with the MITRE ATT&CK tactic `T1003` (Credential Dumping). I then restarted the Wazuh manager service to activate the rule.
+To improve detection, I created a custom Wazuh rule. Through the dashboard, I added a new rule in `local_rules.xml` targeting the "original file name" field from Sysmon event ID 1 (process creation). This rule was given a custom ID (rule ID `100002`), assigned a high severity (`15`), and tagged with the MITRE ATT&CK tactic `T1003` (Credential Dumping). I then restarted the Wazuh manager service to activate the rule.
 
  ![image](https://github.com/user-attachments/assets/9f273b83-6706-4432-b313-18658e0d5e4e)
 
 Finally, I tested the custom rule by executing **Mimikatz** again — this time renaming the executable to `testing.exe` to confirm that the detection was based on the internal metadata, not the file name. After refreshing the Wazuh dashboard, I verified that the new custom alert appeared, successfully detecting the Mimikatz activity even with the file renamed.
+
+![mimikatz](https://github.com/user-attachments/assets/2adb05dd-a1c9-4ffd-967a-d3f9297f49af)
 
 </details>
 
@@ -151,12 +313,12 @@ I moved on to setting up Shuffle to automate alert processing and notification.
 
 1. **Webhook Setup**: Created a Shuffle webhook to receive Wazuh alerts.
 
+      ![image](https://github.com/user-attachments/assets/509ec506-c7b6-422c-ad3b-71eeae91e721)
 
-   ![Wazuh Mimikatz detected in Shuffle ](https://github.com/user-attachments/assets/c5271647-ff4e-43a7-9080-452aeabd3f86)
 
 3. **Regex/Python Parsing**:  
    - Extracted SHA256 hashes manually inside Shuffle using a small Python script after regex challenges.
-     ![image](https://github.com/user-attachments/assets/8325d8cc-e9be-42f8-85cf-f656b30bfe76)
+     ![image](https://github.com/user-attachments/assets/01e9fa4e-e616-43c6-a825-7d573910c659)
 
 4. **VirusTotal Enrichment**:
    - Integrated API key into Shuffle.
@@ -173,9 +335,11 @@ I moved on to setting up Shuffle to automate alert processing and notification.
 6. **Email Notification**:
    - Set subject ("Mimikatz Detected"), included UTC timestamp, alert details, and host information.
    - Successfully received structured emails confirming detection!
+     ![image](https://github.com/user-attachments/assets/8647f0a0-0342-4bc4-899c-9da573dcd9b5)
+
 
 <details>
-<summary>Click to expand detailed workflow explanation</summary>
+<summary> Click to see more details </summary>
 
 In this part of the lab, I moved onto connecting **Shuffle** (SOAR platform) with both **TheHive** and **VirusTotal**, setting up the workflow to automatically enrich alerts and notify analysts.
 
@@ -188,9 +352,13 @@ Next, I built the initial workflow inside Shuffle. The planned flow was:
 
 Before enrichment could happen, I needed to parse the correct **SHA256** hash out of the alert. The hash values were bundled together with labels like `sha1=`, `sha256=`, etc., so I couldn’t just send the whole string to VirusTotal.
 
-At first, I tried using **regex** inside Shuffle’s **Rex Capture Group** feature to pull the SHA256 value directly, but Shuffle’s regex engine had trouble reliably parsing the `Agent Group` field. To solve this, I wrote a small **Python** script inside Shuffle to manually extract the `sha256` value from the incoming event JSON. After that was working, I was able to use regex to correctly pull the `Agent Group`.
+At first, I tried using **regex** inside Shuffle’s **Regex Capture Group** feature to pull the SHA256 value directly, but Shuffle’s regex engine had trouble reliably parsing the `Agent Group` field. To solve this, I wrote a small **Python** script inside Shuffle to manually extract the `sha256` value from the incoming event JSON. After that was working, I was able to use regex to correctly pull the `Agent Group`.
+
+![Python Success](https://github.com/user-attachments/assets/ca8d90dc-83b7-4811-84f3-84fac35c81dc)
 
 With parsing in place, I moved on to **VirusTotal enrichment**. After setting up VirusTotal inside Shuffle by copying my API key, I was able to successfully pull data, including the `malicious` count for hash lookups.
+
+![image](https://github.com/user-attachments/assets/bedfaf29-65ea-4e81-833a-4e867c194274)
 
 To connect Shuffle to **TheHive**, I had to fork and edit the **TheHive app** inside Shuffle to make it compatible with the specific instance I was using. After setting up the connection, I configured the alert fields to parse key details from the execution arguments. 
 
