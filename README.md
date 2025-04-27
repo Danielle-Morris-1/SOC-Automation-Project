@@ -1,4 +1,4 @@
-# 🚀 SOC Automation Project
+# SOC Automation Project
 
 ## Scope 
 In this cybersecurity project, I built a cloud-based SOC automation lab to gain hands-on experience with SIEM, SOAR, and case management integration. My goal was to create a fully functional home lab environment that simulates a real-world SOC. I deployed **Wazuh** as the SIEM/XDR, **TheHive** for case management, and **Shuffle** for SOAR automation.  
@@ -6,7 +6,7 @@ I configured Wazuh to forward alerts into Shuffle workflows, where I parsed even
 
 ---
 
-## 🛠️ Technology Utilized
+## Technology Utilized 🛠️ 
 
 - **Wazuh**: SIEM/XDR platform for alert detection and forwarding.
 - **TheHive**: Case management system for incident tracking.
@@ -18,14 +18,14 @@ I configured Wazuh to forward alerts into Shuffle workflows, where I parsed even
 - **PowerShell**: Windows scripting for telemetry generation and configuration tasks.
 
 
-## ☁️ Infrastructure/Cloud Environment
+## Infrastructure/Cloud Environment ☁️ 
 
 - **DigitalOcean**: Deployed Ubuntu servers in the cloud to host Wazuh and TheHive, including secure SSH access and firewall configurations.
 - **VirtualBox**: Hosted Windows 10 VM locally for telemetry generation and attack simulation.
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents 📑 
 
 - [Lab Diagram](#lab-diagram)
 - [Installation 🖥️](https://github.com/Danielle-Morris-1/SOC-Automation-Project/tree/main?tab=readme-ov-file#installation-%EF%B8%8F)
