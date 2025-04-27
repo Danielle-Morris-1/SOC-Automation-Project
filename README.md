@@ -63,8 +63,8 @@ The flow included:
 To set up the lab:
 
 - **Windows 10 VM**: Downloaded ISO → Installed manually on VirtualBox → Installed Sysmon for enhanced telemetry
-- **Wazuh Server** (DigitalOcean): Deployed Ubuntu droplet → Secured SSH access → Installed Wazuh 4.7 → Extract Wazuh Credentials
-- **TheHive Server**: Another Ubuntu droplet → Secured SSH access → Installed Java, Cassandra, Elasticsearch → Installed TheHive 5 → Default Credentials on port 9000
+- **Wazuh Server** (DigitalOcean): Deployed Ubuntu droplet → Secured SSH access → Installed **[Wazuh 4.7](https://github.com/Danielle-Morris-1/SOC-Automation-Project/blob/main/Wazuh-Install-Instructions)**→ Extract Wazuh Credentials
+- **TheHive Server**: Another Ubuntu droplet → Secured SSH access → Installed Java, Cassandra, Elasticsearch → Installed **[TheHive 5](https://github.com/Danielle-Morris-1/SOC-Automation-Project/blob/main/TheHive-Install-Instructions)** → Default Credentials on port 9000
 
 **Verification of Successful Installation:**  
 - Sysmon logs were visible in Event Viewer.
