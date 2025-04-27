@@ -14,8 +14,7 @@ I configured Wazuh to forward alerts into Shuffle workflows, where I parsed even
 - **Shuffle**: SOAR platform for automating enrichment and analyst notifications.
 - **Python** (inside Shuffle): Custom parsing and extraction of SHA256 hashes. 
 - **VirusTotal**: Threat intelligence source for file and hash reputation lookups.
-- **Bash**: Linux scripting for installation and configuration tasks. 
-- **PowerShell**: Windows scripting for telemetry generation and configuration tasks.
+- **PowerShell & Bash**: Windows and Linux scripting for installation and configuration tasks.
 
 
 ## Infrastructure/Cloud Environment ☁️ 
@@ -271,7 +270,7 @@ In this part of the project, I configured both TheHive and Wazuh servers and got
 Creating telemetry steps and ingest into Wazuh:
 
 - **Sysmon Log Collection**: Modified `ossec.conf` on the Windows agent to capture Sysmon logs by specifying the correct event channel.
-- **Simulated Attack**: Disabled Defender by adding an exclusion temporarily → Downloaded and ran **Mimikatz** to simulate credential dumping.
+- **Simulated Attack**: Disabled Defender by adding an exclusion temporarily → Downloaded and ran **[Mimikatz](https://github.com/gentilkiwi/mimikatz/releases/tag/2.2.0-20220919)** to simulate credential dumping.
   
   ![image](https://github.com/user-attachments/assets/216cc76e-6b5d-4ed8-a417-36b90f4ce322)
 
