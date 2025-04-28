@@ -409,3 +409,20 @@ Finishing this project leaves me excited and motivated to take on even more comp
 
 ---
 
+## 🚀 Project Status
+
+![Status](https://img.shields.io/badge/Status-Completed-2ea44f)
+![Skill](https://img.shields.io/badge/Skill-SIEM%20Engineering-blue)
+![Skill](https://img.shields.io/badge/Skill-SOAR%20Automation-brightgreen)
+![Skill](https://img.shields.io/badge/Skill-Case%20Management-orange)
+![Focus](https://img.shields.io/badge/Focus-Cybersecurity-blueviolet)
+
+---
+
+## 📫 Connect With Me!
+
+Let's stay connected and talk cybersecurity!  
+Feel free to reach out to me on [![LinkedIn](https://img.shields.io/badge/LinkedIn-DanielleMorris-blue?logo=linkedin&style=flat-square)](https://www.linkedin.com/in/danielle-morris-04232368/) for networking or collaboration opportunities.
+
+---
+> *"⚡ Automation empowers defenders to think bigger and react faster — this is just the beginning."*
