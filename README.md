@@ -418,11 +418,4 @@ Finishing this project leaves me excited and motivated to take on even more comp
 ![Focus](https://img.shields.io/badge/Focus-Cybersecurity-blueviolet)
 
 ---
-
-## 📫 Connect With Me!
-
-Let's stay connected and talk cybersecurity!  
-Feel free to reach out to me on [![LinkedIn](https://img.shields.io/badge/LinkedIn-DanielleMorris-blue?logo=linkedin&style=flat-square)](https://www.linkedin.com/in/danielle-morris-04232368/) for networking or collaboration opportunities.
-
----
 > *"⚡ Automation empowers defenders to think bigger and react faster — this is just the beginning."*
